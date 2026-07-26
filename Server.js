@@ -2323,13 +2323,14 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // ---------------------------------------------------------------------------
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
+  port: process.env.DB_PORT ,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
+  connectTimeout: 10000,               // fail fast instead of hanging
 });
-
 async function getEmployeeByName(name) {
   const [rows] = await pool.query(
     `SELECT id, name, username, email, role FROM employees WHERE name = ? LIMIT 1`,
